@@ -5,14 +5,15 @@ using UnityEngine;
 public class MagnetTrigger : MonoBehaviour {
 	private long timer;
 	void Start(){
-		timer = System.DateTime.Now.Ticks;
+		//timer = System.DateTime.Now.Ticks;
+		Destroy(gameObject,5.0f);
 	}
 
-	void Update(){
+	/*void Update(){
 		if (System.DateTime.Now.Ticks - timer >= 50000000) {
 			Destroy (gameObject);
 		}
-	}
+	}*/
 
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.name.Contains("food") || other.name.Contains("prop") || other.name.Contains("DeadBody")) {

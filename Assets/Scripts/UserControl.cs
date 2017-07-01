@@ -9,6 +9,7 @@ using CnControls;
 public class UserControl : SnakeMove {
 	public GameObject enemy;
 	public GameObject gDefense;	
+	public GameObject gMagnetTrigger;
 	public int initialBodyNum = 9;
 
 	[SyncVar(hook = "OnChangeLength")]
@@ -17,8 +18,15 @@ public class UserControl : SnakeMove {
 	[SyncVar(hook = "OnChangeSpeedScale")]
 	private int speedScale = 1;
 
-	[SyncVar(hook = "OnChangeDefense")]
+
 	private bool defense = false;
+	[SyncVar(hook = "OnChangeDefense")]
+	private int record_defense=0;
+
+	[SyncVar(hook = "OnChangeMagnet")]
+	private int record_magnet=0;
+	[SyncVar(hook = "OnDestroyBody")]
+	private int record_destroy=0;
 
 	private long timerForDefense;
 
@@ -28,7 +36,6 @@ public class UserControl : SnakeMove {
 		//	Instantiate (enemy, new Vector2 (5.4f, 3.9f), new Quaternion ());
 
 		name = System.DateTime.Now.Ticks + "";
-		gBody.name = name;
 		if (isLocalPlayer) {
 			GameObject mainCamera = GameObject.FindGameObjectWithTag ("MainCamera");
 			if (mainCamera)
@@ -40,10 +47,11 @@ public class UserControl : SnakeMove {
 		}
 		for (int i = 0; i < initialBodyNum; i++) {
 			GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position - new Vector2 (i + 1, 0), new Quaternion());
-			tmpBody.transform.parent = transform;
+			//tmpBody.transform.parent = transform;
+			tmpBody.name = name;
 			lstBody.Add (tmpBody);
 		}
-		startDefense ();
+		OnChangeDefense (0);
 	}
 	
 	void FixedUpdate()
@@ -88,10 +96,12 @@ public class UserControl : SnakeMove {
 		}
 
 
-		//close defense if time is out
-		if (defense == true && System.DateTime.Now.Ticks - timerForDefense >= 80000000) {
+		//close defense if time is out8
+		if (defense == true && System.DateTime.Now.Ticks - timerForDefense >= 30000000) {
 			defense = false;
-			Destroy (transform.FindChild("BodyDefense(Clone)").gameObject);
+			var de = transform.FindChild ("BodyDefense(Clone)");
+			if(de)
+				Destroy (de.gameObject);
 			for (int i = 0; i < lstBody.Count; i++) {
 				Destroy (lstBody[i].transform.FindChild("BodyDefense(Clone)").gameObject);
 			}
@@ -110,6 +120,7 @@ public class UserControl : SnakeMove {
 		}
 	}*/
 
+
 	override public void addScore(int _score){
 		score += _score;
 		if (isLocalPlayer)
@@ -120,10 +131,10 @@ public class UserControl : SnakeMove {
 	}
 
 	public void addBody(){
-		gBody.name = name;
 		Vector2 forward = new Vector2((float)Math.Cos(transform.eulerAngles.z*Math.PI/180),(float)Math.Sin(transform.eulerAngles.z*Math.PI/180));
 		GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position - forward, transform.rotation);
-		tmpBody.transform.parent = transform;
+		//tmpBody.transform.parent = transform;
+		tmpBody.name = name;
 		lstBody.Add (tmpBody);
 		if (defense == true) {
 			GameObject tmpGoDefense = Instantiate (gDefense, tmpBody.transform.position, new Quaternion ());
@@ -142,17 +153,26 @@ public class UserControl : SnakeMove {
 	public bool isDefense(){
 		return defense;
 	}
-
+		
 	public void startDefense(){
-		defense = true;
-		timerForDefense = System.DateTime.Now.Ticks;
-		GameObject goDefense = Instantiate (gDefense, transform.position, new Quaternion ());
-		goDefense.transform.parent = transform;
-		for(int i =0;i<lstBody.Count;i++){
-			GameObject tmpGDefenseLb = Instantiate (gDefense, lstBody[i].transform.position, new Quaternion ());
-			tmpGDefenseLb.transform.parent = lstBody[i].transform;
-		}
+		if (!isServer)
+			return;
+		record_defense++;
+
 	}
+	public void startMagnet(){
+		if (!isServer)
+			return;
+		record_magnet++;
+
+	}
+	public void DestroyBody(){
+		if (!isServer)
+			return;
+		record_destroy++;
+
+	}
+
 
 	void OnChangeLength(int _score){
 		score = _score;
@@ -162,8 +182,33 @@ public class UserControl : SnakeMove {
 		speedScale = _speedScale;
 	}
 
-	void OnChangeDefense(bool _defense){
-		if (_defense)
-			startDefense ();
+	void OnChangeDefense(int r_d){
+		if(defense==true)
+			timerForDefense = System.DateTime.Now.Ticks;
+		else{
+			defense = true;
+			/*var de = transform.FindChild ("BodyDefense(Clone)");
+		if (de)
+			return;*/
+			timerForDefense = System.DateTime.Now.Ticks;
+			GameObject goDefense = Instantiate (gDefense, transform.position, new Quaternion ());
+			goDefense.transform.parent = transform;
+			for(int i =0;i<lstBody.Count;i++){
+				GameObject tmpGDefenseLb = Instantiate (gDefense, lstBody[i].transform.position, new Quaternion ());
+				tmpGDefenseLb.transform.parent = lstBody[i].transform;
+			}
+		}
+
+	}
+
+	void OnChangeMagnet(int r_m){
+		GameObject tmpGMagnetTrigger = Instantiate (gMagnetTrigger, transform.position, new Quaternion ());
+		tmpGMagnetTrigger.transform.parent = transform;
+	}
+	void OnDestroyBody(int r_d){
+		Debug.Log (r_d);
+		for (int i = 0; i < lstBody.Count; i++)
+			Destroy (lstBody [i]);
+		gameObject.SetActive (false);
 	}
 }

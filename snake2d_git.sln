@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "snake2d_git", "Assembly-CSharp-firstpass.csproj", "{A60396CD-91F5-3087-6600-C7F48DC9BAC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "snake2d_git", "Assembly-CSharp.csproj", "{AE7FA28D-842D-780D-F530-40EB6C3CF569}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "snake2d_git", "Assembly-CSharp-Editor-firstpass.csproj", "{A578FEF1-20E3-BFEB-383D-0C436D57738A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A60396CD-91F5-3087-6600-C7F48DC9BAC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A60396CD-91F5-3087-6600-C7F48DC9BAC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A60396CD-91F5-3087-6600-C7F48DC9BAC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A60396CD-91F5-3087-6600-C7F48DC9BAC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE7FA28D-842D-780D-F530-40EB6C3CF569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE7FA28D-842D-780D-F530-40EB6C3CF569}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE7FA28D-842D-780D-F530-40EB6C3CF569}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE7FA28D-842D-780D-F530-40EB6C3CF569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A578FEF1-20E3-BFEB-383D-0C436D57738A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A578FEF1-20E3-BFEB-383D-0C436D57738A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A578FEF1-20E3-BFEB-383D-0C436D57738A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A578FEF1-20E3-BFEB-383D-0C436D57738A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

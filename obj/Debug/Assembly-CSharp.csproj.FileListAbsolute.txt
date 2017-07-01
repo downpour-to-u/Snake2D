@@ -57,3 +57,33 @@ D:\未来\563032815\FileRecv\snake2d\Temp\bin\Debug\UnityEngine.VR.xml
 D:\未来\563032815\FileRecv\snake2d\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 D:\未来\563032815\FileRecv\snake2d\obj\Debug\Assembly-CSharp.dll
 D:\未来\563032815\FileRecv\snake2d\obj\Debug\Assembly-CSharp.pdb
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Assembly-CSharp.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Assembly-CSharp.pdb
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEditor.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.Analytics.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.HoloLens.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.Networking.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.PlaymodeTestsRunner.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.UI.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.VR.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Mono.Cecil.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Unity.SerializationLogic.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Unity.DataContract.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Unity.UNetWeaver.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Unity.CecilTools.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.xml
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEditor.xml
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.UI.xml
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.Networking.xml
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.PlaymodeTestsRunner.xml
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.Analytics.xml
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.HoloLens.xml
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngine.VR.xml
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\obj\Debug\Assembly-CSharp.dll
+C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\obj\Debug\Assembly-CSharp.pdb
