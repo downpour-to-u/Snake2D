@@ -14,7 +14,6 @@ public class GameController : NetworkBehaviour {
 	public float backgroundY;
 
 	private int foodCount = 0;
-	int frame=0;
 	// Use this for initialization
 	void Start () {
 		if (!isServer)

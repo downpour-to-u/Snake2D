@@ -11,6 +11,7 @@ public class UserControl : SnakeMove {
 	public GameObject gDefense;	
 	public GameObject gMagnetTrigger;
 	public int initialBodyNum = 9;
+	public int lenBody=1;
 
 	[SyncVar(hook = "OnChangeLength")]
 	private int score = 0;
@@ -30,11 +31,11 @@ public class UserControl : SnakeMove {
 
 	private long timerForDefense;
 
+	// distance the snake move in each fame;
+	private float dpf;
 	// Use this for initialization
 	void Start () {
-		//if(isServer)
-		//	Instantiate (enemy, new Vector2 (5.4f, 3.9f), new Quaternion ());
-
+		//give current time to snake as name;
 		name = System.DateTime.Now.Ticks + "";
 		if (isLocalPlayer) {
 			GameObject mainCamera = GameObject.FindGameObjectWithTag ("MainCamera");
@@ -42,23 +43,29 @@ public class UserControl : SnakeMove {
 				mainCamera.GetComponent<CameraControl> ().player = gameObject;
 		}
 
-		for (float i = initialBodyNum + 1.0f; i > 0.0f; i -= 2.0f / FPS) {
-			path.Add ((Vector2)transform.position - new Vector2 (i + 1, 0));
+		// *speed / FPS:distance the snake move in each fame;
+		dpf = speed / FPS;
+		// initializing the path; path[0] is the tail;
+		for (float i =0; initialBodyNum - i*dpf > 0.0f; i++ ) {
+			path.Insert(0,(Vector2)transform.position - new Vector2 (i *dpf, 0));
 		}
+		//creat body on the left of head;
 		for (int i = 0; i < initialBodyNum; i++) {
-			GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position - new Vector2 (i + 1, 0), new Quaternion());
+			GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position- new Vector2 (i*lenBody, 0) , new Quaternion());
 			//tmpBody.transform.parent = transform;
 			tmpBody.name = name;
 			lstBody.Add (tmpBody);
 		}
+
 		OnChangeDefense (0);
 	}
 	
 	void FixedUpdate()
 	{
+		//get the forward of head;
 		Vector2 forward = new Vector2((float)Math.Cos(transform.eulerAngles.z*Math.PI/180),(float)Math.Sin(transform.eulerAngles.z*Math.PI/180));
+		//speed up
 		if (isLocalPlayer) {
-			//speed up
 			if (CnInputManager.GetButton ("Accelerate")) {
 				speedScale = 2;
 			} else {
@@ -67,23 +74,25 @@ public class UserControl : SnakeMove {
 		}
 		//add path
 		for (int i = 1; i <= speedScale; i++) {
-			Vector2 tmpPosition = (Vector2)transform.position + forward * (speed / FPS) * i;
+			Vector2 tmpPosition = (Vector2)transform.position + forward * dpf * i;
 			path.Add (new Vector2 (tmpPosition.x, tmpPosition.y));
 		}
 		//move head
 		transform.position = new Vector2(path [path.Count - 1].x, path [path.Count - 1].y);
 		//move bodies
-		int lag = (int)Math.Round ((FPS/speedScale) / speed);
+		int lenBody_InPath = (int)Math.Round (lenBody*FPS / speed);//how many locs length of a body in path(list);
 		for (int i = 0; i < lstBody.Count; i++) {
 			Vector2 tmpPosition;
-			if (speedScale == 1)
-				tmpPosition = path [path.Count - lag - 1 - Math.Min (path.Count - lag - 1, i * lag)];
-			else
-				tmpPosition = path [path.Count - (int)(lag * speedScale) - 1 - Math.Min (path.Count - (int)(lag * speedScale) - 1, i * (int)(lag * speedScale))];
+			/**********
+			 path.Count-1: the last loc in the path;  
+			 path.Count - 1 -lenBody_InPath: position of the second node should be (first is snake head);
+			 Math.Min (path.Count -1 - lenBody_InPath, i * lenBody_InPath ): if path is not long enough(when the snake become long suddenly), choose the last node 
+			 **********/
+			tmpPosition = path [ path.Count - 1 -lenBody_InPath   - Math.Min (path.Count -1 - lenBody_InPath, i * lenBody_InPath )];
 			lstBody[i].transform.position = new Vector2(tmpPosition.x,tmpPosition.y);
 		}
-		//remove unnecessary path node
-		if (path.Count > (lstBody.Count + 1) * lag + lag * 2) {
+		//remove unnecessary path node(save another two node for future "add body")
+		if (path.Count > (lstBody.Count + 1) * lenBody_InPath + lenBody_InPath * 2) {
 			path.RemoveAt (0);
 		}
 

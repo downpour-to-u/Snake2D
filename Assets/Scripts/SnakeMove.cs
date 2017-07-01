@@ -10,7 +10,7 @@ public abstract class SnakeMove : NetworkBehaviour {
 
 	protected List<Vector2> path = new List<Vector2>();
 	protected List<GameObject> lstBody = new List<GameObject>();
-	protected int FPS = 40;
+	protected int FPS = 50;
 
 	public abstract void Destroy ();
 	public abstract List<GameObject> GetBody ();
