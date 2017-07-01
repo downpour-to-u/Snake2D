@@ -14,7 +14,7 @@ public class GameController : NetworkBehaviour {
 	public float backgroundY;
 
 	private int foodCount = 0;
-
+	int frame=0;
 	// Use this for initialization
 	void Start () {
 		if (!isServer)
@@ -24,16 +24,30 @@ public class GameController : NetworkBehaviour {
 			NetworkServer.Spawn (tmpFood);
 		}
 		foodCount = maxFoodCount;
-		GameObject tmpProp = Instantiate (gStar, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
+		GameObject tmpProp= Instantiate (gStar, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
 		NetworkServer.Spawn (tmpProp);
-		tmpProp = Instantiate (gDefense, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
-		NetworkServer.Spawn (tmpProp);
-		tmpProp = Instantiate (gMagnet, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
-		NetworkServer.Spawn (tmpProp);
+		GameObject tmpProp1 = Instantiate (gDefense, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
+		NetworkServer.Spawn (tmpProp1);
+		GameObject tmpProp2 = Instantiate (gMagnet, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
+		NetworkServer.Spawn (tmpProp2);	
+
+
 	}
 
 	// Update is called once per frame
 	void Update () {
+		/*frame++;
+		frame = frame % 600;
+		if (frame == 1) {
+			GameObject tmpProp;
+			tmpProp= Instantiate (gStar, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
+			NetworkServer.Spawn (tmpProp);
+			tmpProp = Instantiate (gDefense, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
+			NetworkServer.Spawn (tmpProp);
+			tmpProp = Instantiate (gMagnet, new Vector2 (Random.Range (-backgroundX, backgroundX), Random.Range (-backgroundY, backgroundY)), new Quaternion ());
+			NetworkServer.Spawn (tmpProp);	
+		}*/
+			
 		if (!isServer)
 			return;
 		if (foodCount < maxFoodCount) {
@@ -56,6 +70,7 @@ public class GameController : NetworkBehaviour {
 			GameObject tmpDeadBody = Instantiate (deadSnake, (Vector2)listBody [i].transform.position+new Vector2(UnityEngine.Random.Range(-0.5f,0.5f),UnityEngine.Random.Range(-0.5f,0.5f)),listBody [i].transform.rotation);
 			NetworkServer.Spawn (tmpDeadBody);
 		}
-		Destroy (player.gameObject);
+		player.GetComponent<UserControl> ().DestroyBody ();
+
 	}
 }
