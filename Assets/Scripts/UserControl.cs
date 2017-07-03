@@ -11,6 +11,7 @@ public class UserControl : SnakeMove {
 	public GameObject gMagnetTrigger;
 	public int initialBodyNum = 9;
 	public int lenBody=1;
+	public GameObject gRespawnUI;
 
 	[SyncVar(hook = "OnChangeScore")]
 	private int score = 0;
@@ -32,12 +33,18 @@ public class UserControl : SnakeMove {
 	private string id;
 	// distance the snake move in each fame;
 	private float dpf;
+	private NetworkStartPosition[] spawnPoints;
 	GameObject test;
 	// Use this for initialization
 	void Start () {
 		//give current time to snake as name;
-		Debug.Break ();
+		//Debug.Break ();
 		if (isLocalPlayer) {
+			//for respawn
+			spawnPoints = FindObjectsOfType<NetworkStartPosition>();
+			MainUI.localplayer = gameObject;
+
+			//for camera
 			test = gDefense;
 			GameObject mainCamera = GameObject.FindGameObjectWithTag ("MainCamera");
 			if (mainCamera)
@@ -219,9 +226,47 @@ public class UserControl : SnakeMove {
 		GameObject tmpGMagnetTrigger = Instantiate (gMagnetTrigger, transform.position, new Quaternion ());
 		tmpGMagnetTrigger.transform.parent = transform;
 	}
+
 	void OnDestroyBody(int r_d){
 		for (int i = 0; i < lstBody.Count; i++)
 			Destroy (lstBody [i]);
+		lstBody.Clear ();
+		path.Clear ();
+
+		Instantiate (gRespawnUI, (Vector2)transform.position, new Quaternion());
+
 		gameObject.SetActive (false);
+	}
+
+	[ClientRpc]
+	public void RpcRespawn(){
+		if (isLocalPlayer)
+		{
+			// Set the spawn point to origin as a default value
+			Vector3 spawnPoint = Vector3.zero;
+
+			// If there is a spawn point array and the array is not empty, pick one at random
+			if (spawnPoints != null && spawnPoints.Length > 0)
+			{
+				spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)].transform.position;
+			}
+
+			// Set the player’s position to the chosen spawn point
+			transform.position = spawnPoint;
+
+			// initializing the path; path[0] is the tail;
+			for (float i =0; initialBodyNum - i*dpf > 0.0f; i++ ) {
+				path.Insert(0,(Vector2)transform.position - new Vector2 (i *dpf, 0));
+			}
+
+			//creat body on the left of head;
+			for (int i = 0; i < initialBodyNum; i++) {
+				GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position- new Vector2 (i*lenBody, 0) , new Quaternion());
+				//tmpBody.transform.parent = transform;
+				tmpBody.name = name;
+				lstBody.Add (tmpBody);
+			}
+			OnChangeDefense (0);
+		}
 	}
 }

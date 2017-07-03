@@ -1,16 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\SettingsUI.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UserControl.cs">
     <Files>
-      <File FileName="Assets\Scripts\UserControl.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\DestroyByBoundary.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GameController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\DestroyByBody.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\SnakeMove.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PropControl.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GhostMove.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\StoreUI.cs" Line="21" Column="1" />
-      <File FileName="Assets\Scripts\SettingsUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UserControl.cs" Line="240" Column="2" />
+      <File FileName="Assets\Scripts\GameController.cs" Line="77" Column="54" />
+      <File FileName="Assets\Scripts\MainUI.cs" Line="3" Column="19" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
