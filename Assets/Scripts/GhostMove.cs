@@ -44,15 +44,6 @@ public class GhostMove : SnakeMove {
 
 	}
 
-	override public void Destroy(){
-		for (int i = 0; i < lstBody.Count; i++) {
-			Destroy (lstBody [i]);
-		}
-		lstBody.Clear ();
-		path.Clear ();
-		Destroy (gameObject);
-	}
-
 	override public List<GameObject> GetBody(){
 		return lstBody;
 	}

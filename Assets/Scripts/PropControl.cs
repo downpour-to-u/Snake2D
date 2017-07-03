@@ -38,8 +38,7 @@ public class PropControl : NetworkBehaviour {
 			} else if (type == 3) {
 				if (co.name.Split ('(') [0] != "Enemy") {
 					co.GetComponent<UserControl> ().startDefense ();
-					//if(!isLocalPlayer)
-					//	co.GetComponent<UserControl> ().startDefense ();
+
 				}
 										
 			}

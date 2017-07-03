@@ -14,7 +14,7 @@ public class DestroyByBoundary : NetworkBehaviour {
 			return;
 		if (other.tag == "Player"){
 			//NetworkInstanceId netWorkID = other.GetComponent<NetworkIdentity> ();
-			GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ().Dead (other);
+			GameObject.FindWithTag("GameController").GetComponent<GameController> ().Dead (other);
 		}
 	}
 
