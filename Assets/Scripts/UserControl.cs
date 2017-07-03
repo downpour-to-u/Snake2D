@@ -7,18 +7,16 @@ using UnityEngine.UI;
 
 using CnControls;
 public class UserControl : SnakeMove {
-	public GameObject enemy;
 	public GameObject gDefense;	
 	public GameObject gMagnetTrigger;
 	public int initialBodyNum = 9;
 	public int lenBody=1;
 
-	[SyncVar(hook = "OnChangeLength")]
+	[SyncVar(hook = "OnChangeScore")]
 	private int score = 0;
 
-	[SyncVar(hook = "OnChangeSpeedScale")]
+	[SyncVar]
 	private int speedScale = 1;
-
 
 	private bool defense = false;
 	[SyncVar(hook = "OnChangeDefense")]
@@ -31,33 +29,39 @@ public class UserControl : SnakeMove {
 
 	private long timerForDefense;
 
+	private string id;
 	// distance the snake move in each fame;
 	private float dpf;
+	GameObject test;
 	// Use this for initialization
 	void Start () {
 		//give current time to snake as name;
-		name = System.DateTime.Now.Ticks + "";
+		Debug.Break ();
 		if (isLocalPlayer) {
+			test = gDefense;
 			GameObject mainCamera = GameObject.FindGameObjectWithTag ("MainCamera");
 			if (mainCamera)
 				mainCamera.GetComponent<CameraControl> ().player = gameObject;
-		}
+			
 
-		// *speed / FPS:distance the snake move in each fame;
-		dpf = speed / FPS;
-		// initializing the path; path[0] is the tail;
-		for (float i =0; initialBodyNum - i*dpf > 0.0f; i++ ) {
-			path.Insert(0,(Vector2)transform.position - new Vector2 (i *dpf, 0));
+			// *speed / FPS:distance the snake move in each fame;
+			dpf = speed / FPS;
+			// initializing the path; path[0] is the tail;
+			for (float i =0; initialBodyNum - i*dpf > 0.0f; i++ ) {
+				path.Insert(0,(Vector2)transform.position - new Vector2 (i *dpf, 0));
+			}
+			//creat body on the left of head;
+			for (int i = 0; i < initialBodyNum; i++) {
+				GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position- new Vector2 (i*lenBody, 0) , new Quaternion());
+				//tmpBody.transform.parent = transform;
+				tmpBody.name = name;
+				lstBody.Add (tmpBody);
+			}
+			OnChangeDefense (0);
+			id = System.DateTime.Now.Ticks + "";
 		}
-		//creat body on the left of head;
-		for (int i = 0; i < initialBodyNum; i++) {
-			GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position- new Vector2 (i*lenBody, 0) , new Quaternion());
-			//tmpBody.transform.parent = transform;
-			tmpBody.name = name;
-			lstBody.Add (tmpBody);
-		}
+		Debug.Log (id);
 
-		OnChangeDefense (0);
 	}
 	
 	void FixedUpdate()
@@ -67,15 +71,21 @@ public class UserControl : SnakeMove {
 		//speed up
 		if (isLocalPlayer) {
 			if (CnInputManager.GetButton ("Accelerate")) {
-				speedScale = 2;
+				//server execute
+				if(speedScale!=2)
+					CmdSetSpeedScale(2);
 			} else {
-				speedScale = 1;
+				if(speedScale!=1)
+					CmdSetSpeedScale(1);
 			}
 		}
+		if (speedScale == 2)
+			Debug.Log ("speed");
 		//add path
 		for (int i = 1; i <= speedScale; i++) {
 			Vector2 tmpPosition = (Vector2)transform.position + forward * dpf * i;
-			path.Add (new Vector2 (tmpPosition.x, tmpPosition.y));
+			Vector2 newp = new Vector2 (tmpPosition.x, tmpPosition.y);
+			path.Add (newp);
 		}
 		//move head
 		transform.position = new Vector2(path [path.Count - 1].x, path [path.Count - 1].y);
@@ -106,7 +116,7 @@ public class UserControl : SnakeMove {
 
 
 		//close defense if time is out8
-		if (defense == true && System.DateTime.Now.Ticks - timerForDefense >= 30000000) {
+		if (defense == true && System.DateTime.Now.Ticks - timerForDefense >= 50000000) {
 			defense = false;
 			var de = transform.FindChild ("BodyDefense(Clone)");
 			if(de)
@@ -115,28 +125,21 @@ public class UserControl : SnakeMove {
 				Destroy (lstBody[i].transform.FindChild("BodyDefense(Clone)").gameObject);
 			}
 		}
+
 	}
 
-	/*void OnTriggerEnter2D(Collider2D other) {
-		if (other.tag == "body") {
-			for (int i = 0; i < lstBody.Count; i++) {
-				Destroy (lstBody [i]);
-			}
-			lstBody.Clear ();
-			path.Clear ();
-			Destroy (gameObject);
-			//Application.LoadLevel(Application.loadedLevel);
-		}
-	}*/
-
+	//server execute;
+	[Command]
+	void CmdSetSpeedScale(int value){
+		speedScale = value;
+	}
+		
 
 	override public void addScore(int _score){
-		score += _score;
+		score=score+_score;
 		if (isLocalPlayer)
-			GameObject.FindGameObjectWithTag ("TextLength").GetComponent<Text> ().text = "我的分数：" + score;
-		//add body
-		while (score / 5 > lstBody.Count - initialBodyNum)
-			addBody ();
+			return;
+		OnChangeScore (score);
 	}
 
 	public void addBody(){
@@ -150,11 +153,7 @@ public class UserControl : SnakeMove {
 			tmpGoDefense.transform.parent = tmpBody.transform;
 		}
 	}
-
-	override public void Destroy(){
-		Destroy (gameObject);
-	}
-
+		
 	override public List<GameObject> GetBody(){
 		return lstBody;
 	}
@@ -167,28 +166,34 @@ public class UserControl : SnakeMove {
 		if (!isServer)
 			return;
 		record_defense++;
+		if (isLocalPlayer)
+			return;
+		OnChangeDefense (0);
 
 	}
 	public void startMagnet(){
 		if (!isServer)
 			return;
 		record_magnet++;
-
+		if (isLocalPlayer)
+			return;
+		OnChangeMagnet (0);
 	}
 	public void DestroyBody(){
 		if (!isServer)
 			return;
 		record_destroy++;
+		if (isLocalPlayer)
+			return;
+		OnDestroyBody (0);
 
 	}
-
-
-	void OnChangeLength(int _score){
-		score = _score;
-	}
-
-	void OnChangeSpeedScale(int _speedScale){
-		speedScale = _speedScale;
+		
+	void OnChangeScore(int _socre){
+		GameObject.FindGameObjectWithTag ("TextLength").GetComponent<Text> ().text = "我的分数：" + _socre;
+		//add body
+		while (_socre / 5 > lstBody.Count - initialBodyNum)
+			addBody ();
 	}
 
 	void OnChangeDefense(int r_d){
@@ -209,13 +214,12 @@ public class UserControl : SnakeMove {
 		}
 
 	}
-
+		
 	void OnChangeMagnet(int r_m){
 		GameObject tmpGMagnetTrigger = Instantiate (gMagnetTrigger, transform.position, new Quaternion ());
 		tmpGMagnetTrigger.transform.parent = transform;
 	}
 	void OnDestroyBody(int r_d){
-		Debug.Log (r_d);
 		for (int i = 0; i < lstBody.Count; i++)
 			Destroy (lstBody [i]);
 		gameObject.SetActive (false);

@@ -2,14 +2,27 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UserControl.cs">
     <Files>
-      <File FileName="Assets\Scripts\UserControl.cs" Line="219" Column="42" />
-      <File FileName="Assets\Scripts\SnakeMove.cs" Line="13" Column="23" />
-      <File FileName="Assets\Scripts\PropControl.cs" Line="51" Column="11" />
-      <File FileName="Assets\Scripts\GameController.cs" Line="26" Column="138" />
+      <File FileName="Assets\Scripts\UserControl.cs" Line="40" Column="23" />
+      <File FileName="Assets\Scripts\GameController.cs" Line="55" Column="16" />
+      <File FileName="Assets\Scripts\DestroyByBody.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\DestroyByBoundary.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\MagnetTrigger.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\NetworkManagerHUD.cs" Line="76" Column="40" />
+      <File FileName="Assets\Scripts\PacmanMove.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GhostMove.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PropControl.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\SnakeMove.cs" Line="9" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Assets\Scripts\GameController.cs" line="64" column="1" />
+      <Breakpoint file="C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Assets\Scripts\DestroyByBody.cs" line="15" column="1" />
+      <Breakpoint file="C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Assets\Scripts\UserControl.cs" line="225" column="13" />
+      <Breakpoint file="C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Assets\Scripts\UserControl.cs" line="61" column="1" />
+      <Breakpoint file="C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Assets\Scripts\UserControl.cs" line="39" column="1" />
+      <Breakpoint file="C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Assets\Scripts\UserControl.cs" line="41" column="20" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

@@ -61,12 +61,17 @@ public class GameController : NetworkBehaviour {
 	}
 
 	public void Dead(Collider2D player){
+		if (!isServer)
+			return;
 		SnakeMove userControl= player.GetComponent<SnakeMove> ();
 		//UserControl userControl= new GhostMove ();
-		Instantiate (deadSnake, (Vector2)player.transform.position+new Vector2(UnityEngine.Random.Range(-0.5f,0.5f),UnityEngine.Random.Range(-0.5f,0.5f)), player.transform.rotation);
+		GameObject tmpDeadBody=Instantiate (deadSnake, (Vector2)player.transform.position+new Vector2(Random.Range(-0.5f,0.5f),Random.Range(-0.5f,0.5f)), player.transform.rotation);
+		NetworkServer.Spawn (tmpDeadBody);
 		List<GameObject> listBody = userControl.GetBody();
 		for (int i = 0; i < listBody.Count; i++) {
-			GameObject tmpDeadBody = Instantiate (deadSnake, (Vector2)listBody [i].transform.position+new Vector2(UnityEngine.Random.Range(-0.5f,0.5f),UnityEngine.Random.Range(-0.5f,0.5f)),listBody [i].transform.rotation);
+			tmpDeadBody = Instantiate (deadSnake, 
+				(Vector2)listBody [i].transform.position+new Vector2(Random.Range(-0.5f,0.5f),Random.Range(-0.5f,0.5f)),
+				listBody [i].transform.rotation);
 			NetworkServer.Spawn (tmpDeadBody);
 		}
 		player.GetComponent<UserControl> ().DestroyBody ();
