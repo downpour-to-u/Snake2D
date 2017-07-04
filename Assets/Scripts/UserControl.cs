@@ -20,63 +20,57 @@ public class UserControl : SnakeMove {
 	private int speedScale = 1;
 
 	private bool defense = false;
-	[SyncVar(hook = "OnChangeDefense")]
-	private int record_defense=0;
 
-	[SyncVar(hook = "OnChangeMagnet")]
-	private int record_magnet=0;
-	[SyncVar(hook = "OnDestroyBody")]
-	private int record_destroy=0;
 
 	private long timerForDefense;
 
-	private string id;
-	// distance the snake move in each fame;
 	private float dpf;
 	private NetworkStartPosition[] spawnPoints;
-	GameObject test;
+
 	// Use this for initialization
 	void Start () {
 		//give current time to snake as name;
-		//Debug.Break ();
+		name = System.DateTime.Now.Ticks + "";
 		if (isLocalPlayer) {
-			//for respawn
-			spawnPoints = FindObjectsOfType<NetworkStartPosition>();
-			MainUI.localplayer = gameObject;
-
 			//for camera
-			test = gDefense;
 			GameObject mainCamera = GameObject.FindGameObjectWithTag ("MainCamera");
 			if (mainCamera)
 				mainCamera.GetComponent<CameraControl> ().player = gameObject;
-			
-
-			// *speed / FPS:distance the snake move in each fame;
-			dpf = speed / FPS;
-			// initializing the path; path[0] is the tail;
-			for (float i =0; initialBodyNum - i*dpf > 0.0f; i++ ) {
-				path.Insert(0,(Vector2)transform.position - new Vector2 (i *dpf, 0));
-			}
-			//creat body on the left of head;
-			for (int i = 0; i < initialBodyNum; i++) {
-				GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position- new Vector2 (i*lenBody, 0) , new Quaternion());
-				//tmpBody.transform.parent = transform;
-				tmpBody.name = name;
-				lstBody.Add (tmpBody);
-			}
-			OnChangeDefense (0);
-			id = System.DateTime.Now.Ticks + "";
 		}
-		Debug.Log (id);
 
+		//for respawn
+		spawnPoints = FindObjectsOfType<NetworkStartPosition>();			
+
+		// *speed / FPS:distance the snake move in each fame;
+		dpf = speed / FPS;
+		// initializing the path; path[0] is the tail;
+		for (float i =0; initialBodyNum - i*dpf > 0.0f; i++ ) {
+			path.Insert(0,(Vector2)transform.position - new Vector2 (i *dpf, 0));
+		}
+		//creat body on the left of head;
+		for (int i = 0; i < initialBodyNum; i++) {
+			GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position- new Vector2 (i*lenBody, 0) , new Quaternion());
+			//tmpBody.transform.parent = transform;
+			tmpBody.name = name;
+			lstBody.Add (tmpBody);
+		}
+		StartDefense ();
 	}
 	
 	void FixedUpdate()
 	{
+		if (transform.position.x >= 1000)
+			return;
 		//get the forward of head;
 		Vector2 forward = new Vector2((float)Math.Cos(transform.eulerAngles.z*Math.PI/180),(float)Math.Sin(transform.eulerAngles.z*Math.PI/180));
-		//speed up
+		//speed up,move
 		if (isLocalPlayer) {
+			//change direction
+			Vector2 dstMovement = new Vector2 (CnInputManager.GetAxis ("Horizontal"), CnInputManager.GetAxis ("Vertical"));
+			Vector2 tmpMovement = Vector2.Lerp (forward, dstMovement, 0.125f);
+			float arc = (float)Math.Atan2 (tmpMovement.y, tmpMovement.x);
+			transform.rotation = Quaternion.Euler (0, 0, (float)(arc * 180.0f / Math.PI));
+
 			if (CnInputManager.GetButton ("Accelerate")) {
 				//server execute
 				if(speedScale!=2)
@@ -88,11 +82,10 @@ public class UserControl : SnakeMove {
 		}
 		if (speedScale == 2)
 			Debug.Log ("speed");
+		
 		//add path
 		for (int i = 1; i <= speedScale; i++) {
-			Vector2 tmpPosition = (Vector2)transform.position + forward * dpf * i;
-			Vector2 newp = new Vector2 (tmpPosition.x, tmpPosition.y);
-			path.Add (newp);
+			path.Add ((Vector2)transform.position + forward * dpf * i);
 		}
 		//move head
 		transform.position = new Vector2(path [path.Count - 1].x, path [path.Count - 1].y);
@@ -113,160 +106,163 @@ public class UserControl : SnakeMove {
 			path.RemoveAt (0);
 		}
 
-		if (isLocalPlayer) {
-			//change direction
-			Vector2 dstMovement = new Vector2 (CnInputManager.GetAxis ("Horizontal"), CnInputManager.GetAxis ("Vertical"));
-			Vector2 tmpMovement = Vector2.Lerp (forward, dstMovement, 0.125f);
-			float arc = (float)Math.Atan2 (tmpMovement.y, tmpMovement.x);
-			transform.rotation = Quaternion.Euler (0, 0, (float)(arc * 180.0f / Math.PI));
-		}
-
-
-		//close defense if time is out8
-		if (defense == true && System.DateTime.Now.Ticks - timerForDefense >= 50000000) {
-			defense = false;
-			var de = transform.FindChild ("BodyDefense(Clone)");
-			if(de)
-				Destroy (de.gameObject);
-			for (int i = 0; i < lstBody.Count; i++) {
-				Destroy (lstBody[i].transform.FindChild("BodyDefense(Clone)").gameObject);
+		if (isServer) {
+			if (defense == true && System.DateTime.Now.Ticks - timerForDefense >= 30000000) {
+				RpcCloseDefense ();
 			}
 		}
-
 	}
 
-	//server execute;
+
+	
+	//Accelarate:server execute
 	[Command]
 	void CmdSetSpeedScale(int value){
 		speedScale = value;
 	}
 		
-
+	//add score
 	override public void addScore(int _score){
 		score=score+_score;
-		if (isLocalPlayer)
-			return;
-		OnChangeScore (score);
 	}
-
+	void OnChangeScore(int _socre){
+		if(isLocalPlayer)
+			GameObject.FindGameObjectWithTag ("TextLength").GetComponent<Text> ().text = "我的分数：" + _socre;
+		//add body
+		if(lstBody.Count - initialBodyNum>=0)
+			while (_socre / 5 > lstBody.Count - initialBodyNum)
+				addBody ();
+	}
 	public void addBody(){
-		Vector2 forward = new Vector2((float)Math.Cos(transform.eulerAngles.z*Math.PI/180),(float)Math.Sin(transform.eulerAngles.z*Math.PI/180));
-		GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position - forward, transform.rotation);
-		//tmpBody.transform.parent = transform;
+		GameObject LastBody = lstBody [lstBody.Count - 1];
+		Vector2 forward = new Vector2((float)Math.Cos(LastBody.transform.eulerAngles.z*Math.PI/180),
+			(float)Math.Sin(LastBody.transform.eulerAngles.z*Math.PI/180));
+		GameObject tmpBody = Instantiate (gBody, (Vector2)LastBody.transform.position - forward, 
+			LastBody.transform.rotation);
 		tmpBody.name = name;
+		tmpBody.GetComponent<SpriteRenderer> ().sortingOrder = LastBody.GetComponent<SpriteRenderer> ().sortingOrder - 1;
 		lstBody.Add (tmpBody);
 		if (defense == true) {
 			GameObject tmpGoDefense = Instantiate (gDefense, tmpBody.transform.position, new Quaternion ());
 			tmpGoDefense.transform.parent = tmpBody.transform;
 		}
-	}
-		
-	override public List<GameObject> GetBody(){
-		return lstBody;
-	}
-
-	public bool isDefense(){
-		return defense;
-	}
-		
-	public void startDefense(){
-		if (!isServer)
-			return;
-		record_defense++;
-		if (isLocalPlayer)
-			return;
-		OnChangeDefense (0);
-
-	}
-	public void startMagnet(){
-		if (!isServer)
-			return;
-		record_magnet++;
-		if (isLocalPlayer)
-			return;
-		OnChangeMagnet (0);
-	}
-	public void DestroyBody(){
-		if (!isServer)
-			return;
-		record_destroy++;
-		if (isLocalPlayer)
-			return;
-		OnDestroyBody (0);
-
-	}
-		
-	void OnChangeScore(int _socre){
-		GameObject.FindGameObjectWithTag ("TextLength").GetComponent<Text> ().text = "我的分数：" + _socre;
-		//add body
-		while (_socre / 5 > lstBody.Count - initialBodyNum)
-			addBody ();
+		//increase the order
+		//in case of the order become lower than the background
+		transform.GetComponent<SpriteRenderer> ().sortingOrder++;
+		for (int i = 0; i < lstBody.Count; i++) {
+			lstBody [i].GetComponent<SpriteRenderer> ().sortingOrder++;
+		}
 	}
 
-	void OnChangeDefense(int r_d){
+
+	//****************prop:1.megnet
+
+	[ClientRpc]
+	public void RpcStartMagnet(){
+		GameObject tmpGMagnetTrigger = Instantiate (gMagnetTrigger, transform.position, new Quaternion ());
+		tmpGMagnetTrigger.transform.parent = transform;
+	}
+	//2.defense
+	public void StartDefense(){
 		if(defense==true)
 			timerForDefense = System.DateTime.Now.Ticks;
 		else{
 			defense = true;
-			/*var de = transform.FindChild ("BodyDefense(Clone)");
-		if (de)
-			return;*/
 			timerForDefense = System.DateTime.Now.Ticks;
-			GameObject goDefense = Instantiate (gDefense, transform.position, new Quaternion ());
-			goDefense.transform.parent = transform;
+			Instantiate (gDefense, transform.position, new Quaternion (),transform);
 			for(int i =0;i<lstBody.Count;i++){
-				GameObject tmpGDefenseLb = Instantiate (gDefense, lstBody[i].transform.position, new Quaternion ());
-				tmpGDefenseLb.transform.parent = lstBody[i].transform;
+				Instantiate (gDefense, lstBody[i].transform.position, new Quaternion (),lstBody[i].transform);
 			}
 		}
-
 	}
-		
-	void OnChangeMagnet(int r_m){
-		GameObject tmpGMagnetTrigger = Instantiate (gMagnetTrigger, transform.position, new Quaternion ());
-		tmpGMagnetTrigger.transform.parent = transform;
+	public void CloseDefense(){
+		defense = false;
+		var de_head = transform.FindChild ("BodyDefense(Clone)");
+		if(de_head)
+			Destroy (de_head.gameObject);
+		for (int i = 0; i < lstBody.Count; i++) {
+			Destroy (lstBody[i].transform.FindChild("BodyDefense(Clone)").gameObject);
+		}
 	}
+	public bool isDefense(){
+		return defense;
+	}
+	[ClientRpc]
+	public void RpcStartDefense(){
+		StartDefense ();
+	}
+	[ClientRpc]
+	void RpcCloseDefense(){
+		CloseDefense ();
+	}
+	//*****************prop end
 
-	void OnDestroyBody(int r_d){
+
+	//destroy
+	public void DestroyBody(){
+		if (!isServer)
+			return;
+		RpcDestroyBody ();
+	}
+	[ClientRpc]
+	void RpcDestroyBody(){
+		if (defense == true)
+			CloseDefense ();
 		for (int i = 0; i < lstBody.Count; i++)
 			Destroy (lstBody [i]);
 		lstBody.Clear ();
-		path.Clear ();
+		score = 0;
+		if (isLocalPlayer){
+			MainUI.localplayer = gameObject;
+			if (GameObject.FindGameObjectWithTag ("RespawnUI") == null)
+				Instantiate (gRespawnUI, (Vector2)transform.position, new Quaternion ());
+			CameraControl.isFollow = false;
+		}
+		//move head to (1000,1000) where player can not see, wait to respawn
+		gameObject.transform.position = new Vector2 (1000, 1000);
+	}	
 
-		Instantiate (gRespawnUI, (Vector2)transform.position, new Quaternion());
 
-		gameObject.SetActive (false);
+	//Respawn
+	[Command]
+	public void CmdRespawn(){
+		// Set the spawn point to origin as a default value
+		Vector3 spawnPoint = Vector3.zero;
+
+		// If there is a spawn point array and the array is not empty, pick one at random
+		if (spawnPoints != null && spawnPoints.Length > 0) {
+			spawnPoint = spawnPoints [UnityEngine.Random.Range (0, spawnPoints.Length)].transform.position;
+		}
+		RpcRespawn (spawnPoint);
 	}
 
 	[ClientRpc]
-	public void RpcRespawn(){
+	public void RpcRespawn(Vector3 _spawnPoint){
 		if (isLocalPlayer)
-		{
-			// Set the spawn point to origin as a default value
-			Vector3 spawnPoint = Vector3.zero;
-
-			// If there is a spawn point array and the array is not empty, pick one at random
-			if (spawnPoints != null && spawnPoints.Length > 0)
-			{
-				spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)].transform.position;
-			}
-
-			// Set the player’s position to the chosen spawn point
-			transform.position = spawnPoint;
-
-			// initializing the path; path[0] is the tail;
-			for (float i =0; initialBodyNum - i*dpf > 0.0f; i++ ) {
-				path.Insert(0,(Vector2)transform.position - new Vector2 (i *dpf, 0));
-			}
-
-			//creat body on the left of head;
-			for (int i = 0; i < initialBodyNum; i++) {
-				GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position- new Vector2 (i*lenBody, 0) , new Quaternion());
-				//tmpBody.transform.parent = transform;
-				tmpBody.name = name;
-				lstBody.Add (tmpBody);
-			}
-			OnChangeDefense (0);
+			CameraControl.isFollow = true;
+		// Set the player’s position to the chosen spawn point
+		transform.position = _spawnPoint;
+		// initializing the path; path[0] is the tail;
+		path.Clear();
+		for (float i = 0; initialBodyNum - i * dpf > 0.0f; i++) {
+			path.Insert (0, (Vector2)transform.position - new Vector2 (i * dpf, 0));
 		}
+
+		//creat body on the left of head;
+		for (int i = 0; i < initialBodyNum; i++) {
+			GameObject tmpBody = Instantiate (gBody, (Vector2)transform.position - new Vector2 (i * lenBody, 0), new Quaternion ());
+			//tmpBody.transform.parent = transform;
+			tmpBody.name = name;
+			lstBody.Add (tmpBody);
+		}
+		StartDefense ();
+	}
+
+	//get
+	override public List<GameObject> GetBody(){
+		return lstBody;
+	}
+	public List<Vector2> GetPath(){
+		return path;
 	}
 }

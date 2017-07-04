@@ -197,6 +197,8 @@
      <Compile Include="Assets\Scripts\MagnetTrigger.cs" />
      <Compile Include="Assets\Scripts\MainUI.cs" />
      <Compile Include="Assets\Scripts\NetworkManagerHUD.cs" />
+     <Compile Include="Assets\Scripts\NetworkManagerHUDForClient.cs" />
+     <Compile Include="Assets\Scripts\NetworkManagerHUDForServer.cs" />
      <Compile Include="Assets\Scripts\PacmanMove.cs" />
      <Compile Include="Assets\Scripts\PropControl.cs" />
      <Compile Include="Assets\Scripts\SettingsUI.cs" />

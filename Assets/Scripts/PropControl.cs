@@ -34,10 +34,10 @@ public class PropControl : NetworkBehaviour {
 			if (type == 1) {
 				co.GetComponent<UserControl> ().addScore (15);
 			} else if (type == 2) {
-				co.GetComponent<UserControl> ().startMagnet();
+				co.GetComponent<UserControl> ().RpcStartMagnet();
 			} else if (type == 3) {
 				if (co.name.Split ('(') [0] != "Enemy") {
-					co.GetComponent<UserControl> ().startDefense ();
+					co.GetComponent<UserControl> ().RpcStartDefense ();
 
 				}
 										

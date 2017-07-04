@@ -56,3 +56,32 @@ C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\Temp\bin\Debug\UnityEngin
 C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
 C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\obj\Debug\Assembly-CSharp-firstpass.dll
 C:\Users\NARUTO\Desktop\Snake Project\Code\snake2d_git\obj\Debug\Assembly-CSharp-firstpass.pdb
+D:\study\snake2d\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
+D:\study\snake2d\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+D:\study\snake2d\Temp\bin\Debug\UnityEditor.dll
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.Analytics.dll
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.dll
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.HoloLens.dll
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.Networking.dll
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.PlaymodeTestsRunner.dll
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.UI.dll
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.VR.dll
+D:\study\snake2d\Temp\bin\Debug\Mono.Cecil.dll
+D:\study\snake2d\Temp\bin\Debug\Unity.SerializationLogic.dll
+D:\study\snake2d\Temp\bin\Debug\Unity.DataContract.dll
+D:\study\snake2d\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+D:\study\snake2d\Temp\bin\Debug\Unity.UNetWeaver.dll
+D:\study\snake2d\Temp\bin\Debug\Unity.CecilTools.dll
+D:\study\snake2d\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+D:\study\snake2d\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.xml
+D:\study\snake2d\Temp\bin\Debug\UnityEditor.xml
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.UI.xml
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.Networking.xml
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.PlaymodeTestsRunner.xml
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.Analytics.xml
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.HoloLens.xml
+D:\study\snake2d\Temp\bin\Debug\UnityEngine.VR.xml
+D:\study\snake2d\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
+D:\study\snake2d\obj\Debug\Assembly-CSharp-firstpass.dll
+D:\study\snake2d\obj\Debug\Assembly-CSharp-firstpass.pdb

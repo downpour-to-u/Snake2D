@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class LobbyUI : MonoBehaviour {
 	public UILabel gName;
+	public UIInput gIp;
 
 	void Start(){
 		gName.text = "昵称：" + SettingsUI.userName;
+		gIp.isSelected = true;
+		gIp.value = "localhost";
 	}
 
 	public void userOnClick () {
@@ -31,5 +34,6 @@ public class LobbyUI : MonoBehaviour {
 
 	public void multiOnClick () {
 		Application.LoadLevel("main");
+		NetworkManagerHUDForClient.IpAddress = gIp.value;
 	}
 }
